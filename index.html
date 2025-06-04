@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ระบบบันทึกจัดการสอนแทน</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Kanit&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        font-family: "Kanit", sans-serif;
+      }
+      .glow-green {
+        text-shadow: 0 0 5px rgba(74, 222, 128, 0.8),
+                     0 0 10px rgba(74, 222, 128, 0.6),
+                     0 0 15px rgba(74, 222, 128, 0.4);
+      }
+      .glow-blue {
+        text-shadow: 0 0 5px rgba(59, 130, 246, 0.8),
+                     0 0 10px rgba(59, 130, 246, 0.6),
+                     0 0 15px rgba(59, 130, 246, 0.4);
+      }
+      .glow-pink {
+        text-shadow: 0 0 5px rgba(236, 72, 153, 0.8),
+                     0 0 10px rgba(236, 72, 153, 0.6),
+                     0 0 15px rgba(236, 72, 153, 0.4);
+      }
+      select:focus,
+      input:focus {
+        box-shadow: 0 0 8px rgba(74, 222, 128, 0.5);
+      }
+      #statsChart {
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+
+  <body class="bg-gradient-to-br from-gray-900 to-black text-white min-h-screen flex flex-col items-center justify-center p-4 sm:p-6">
+    <div class="text-center mb-6">
+      <img
+        src="https://lh3.googleusercontent.com/d/1hTcB5YnvnJtMg0l4fIO5Jo20QbKF5_wh"
+        class="w-32 h-auto mb-4 mx-auto"
+      />
+      <h3 class="text-2xl sm:text-3xl font-bold glow-green">
+        ระบบบันทึกจัดการสอนแทน
+      </h3>
+      <h5 class="text-lg sm:text-xl text-pink-400 glow-pink">
+        ครูอั๋น ใจดี
+      </h5>
+    </div>
+
+    <div class="w-full max-w-2xl bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-2xl shadow-green-500/20 transform hover:-translate-y-1 transition-transform duration-300">
+      <form id="myForm" class="space-y-4 needs-validation" novalidate>
+        <div>
+          <label for="nameTeacher" class="block text-sm font-medium glow-blue">ชื่อผู้ลาสอน</label>
+          <select
+            id="nameTeacher"
+            name="nameTeacher"
+            class="w-full bg-gray-700 border-2 border-gray-600 rounded-lg p-3 text-white focus:border-green-400 focus:ring-0 transition duration-200"
+            required
+          >
+            <option value="" disabled selected>เลือกผู้ลาสอน</option>
+            <option value="นางสาวอารี บัวคุ้มภัย">นางสาวอารี บัวคุ้มภัย</option>
+            <option value="นายประยุทธ์ ไทรย้อยสกุลเลิศ">นายประยุทธ์ ไทรย้อยสกุลเลิศ</option>
+            <option value="นายสุภัทรพงศ์ รวงผึ้งรุ่งโรจน์">นายสุภัทรพงศ์ รวงผึ้งรุ่งโรจน์</option>
+            <option value="นางปนัศญา เจริญมาก">นางปนัศญา เจริญมาก</option>
+            <option value="นางสาวสุวาณี ธรรมศรี">นางสาวสุวาอณี ธรรมศรี</option>
+            <option value="ว่าที่ร้อยตรีหญิงภาริษา ธนสิริงาม">ว่าที่ร้อยตรีหญิงภาริษา ธนสิริงาม</option>
+            <option value="นางมณฑาทิพย์ คีรีสุทธิวงศ์">นางสาวมณฑาทิพย์ คีรีสุทธิวงศ์</option>
+            <option value="นางสาวสุปาณี อินองการ">นางสาวสุปาณี อินองการ</option>
+            <option value="นางสาวนุชนาฏ แถลงสัตย์">นางสาวนุชนาฏ แถลงสัตย์</option>
+            <option value="ว่าที่ร้อยตรีหญิงอุบลวรรณ กันตะแก้ว">ว่าที่ร้อยตรีหญิงอุบลวรรณ กันตะแก้ว</option>
+            <option value="นายณัฐพล เนียมพิทักษ์">นายณัฐพล เนียมพิทักษ์</option>
+            <option value="นายสัมฤทธิ์ มีทรัพย์มั่น">นายสัมฤทธิ์ มีทรัพย์มั่น</option>
+            <option value="นางสาวเพชรนภา ผาดผ่อง">นางสาวเพชรนภา ผาดผ่อง</option>
+            <option value="นางสาวมัทวัน ศรีภักดี">นางสาวมัทวัน ศรีภักดี</option>
+            <option value="นายสรนันท์ สายดี">นายสรนันท์ สายดี</option>
+          </select>
+          <div class="invalid-feedback text-red-500 text-sm mt-1">กรุณาเลือกผู้ลาสอนด้วยค่ะ</div>
+        </div>
+        <div>
+          <label for="nameTeacherSave" class="block text-sm font-medium glow-blue">ชื่อผู้สอนแทน</label>
+          <select
+            id="nameTeacherSave"
+            name="nameTeacherSave"
+            class="w-full bg-gray-700 border-2 border-gray-600 rounded-lg p-3 text-white focus:border-green-400 focus:ring-0 transition duration-200"
+            required
+          >
+            <option value="" disabled selected>เลือกผู้สอนแทน</option>
+            <option value="นางสาวอารี บัวคุ้มภัย">นางสาวอารี บัวคุ้มภัย</option>
+            <option value="นายประยุทธ์ ไทรย้อยสกุลเลิศ">นายประยุทธ์ ไทรย้อยสกุลเลิศ</option>
+            <option value="นายสุภัทรพงศ์ รวงผึ้งรุ่งโรจน์">นายสุภัทรพงศ์ รวงผึ้งรุ่งโรจน์</option>
+            <option value="นางปนัศญา เจริญมาก">นางปนัศญา เจริญมาก</option>
+            <option value="นางสาวสุวาณี ธรรมศรี">นางสาวสุวาอณี ธรรมศรี</option>
+            <option value="ว่าที่ร้อยตรีหญิงภาริษา ธนสิริงาม">ว่าที่ร้อยตรีหญิงภาริษา ธนสิริงาม</option>
+            <option value="นางมณฑาทิพย์ คีรีสุทธิวงศ์">นางสาวมณฑาทิพย์ คีรีสุทธิวงศ์</option>
+            <option value="นางสาวสุปาณี อินองการ">นางสาวสุปาณี อินองการ</option>
+            <option value="นางสาวนุชนาฏ แถลงสัตย์">นางสาวนุชนาฏ แถลงสัตย์</option>
+            <option value="ว่าที่ร้อยตรีหญิงอุบลวรรณ กันตะแก้ว">ว่าที่ร้อยตรีหญิงอุบลวรรณ กันตะแก้ว</option>
+            <option value="นายณัฐพล เนียมพิทักษ์">นายณัฐพล เนียมพิทักษ์</option>
+            <option value="นายสัมฤทธิ์ มีทรัพย์มั่น">นายสัมฤทธิ์ มีทรัพย์มั่น</option>
+            <option value="นางสาวเพชรนภา ผาดผ่อง">นางสาวเพชรนภา ผาดผ่อง</option>
+            <option value="นางสาวมัทวัน ศรีภักดี">นางสาวมัทวัน ศรีภักดี</option>
+            <option value="นายสรนันท์ สายดี">นายสรนันท์ สายดี</option>
+          </select>
+          <div class="invalid-feedback text-red-500 text-sm mt-1">กรุณาเลือกผู้สอนแทนด้วยค่ะ</div>
+        </div>
+        <div>
+          <label for="numberPeriod" class="block text-sm font-medium glow-blue">จำนวนคาบที่สอนแทน</label>
+          <select
+            id="numberPeriod"
+            name="numberPeriod"
+            class="w-full bg-gray-700 border-2 border-gray-600 rounded-lg p-3 text-white focus:border-green-400 focus:ring-0 transition duration-200"
+            required
+          >
+            <option value="" disabled selected>เลือกจำนวนคาบ</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+          <div class="invalid-feedback text-red-500 text-sm mt-1">กรุณาเลือกจำนวนคาบด้วยค่ะ</div>
+        </div>
+        <div>
+          <label for="numberAtPreriod" class="block text-sm font-medium glow-blue">คาบที่สอนแทน</label>
+          <select
+            id="numberAtPreriod"
+            name="numberAtPreriod"
+            class="w-full bg-gray-700 border-2 border-gray-600 rounded-lg p-3 text-white focus:border-green-400 focus:ring-0 transition duration-200"
+            required
+          >
+            <option value="" disabled selected>เลือกคาบที่สอน</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+          <div class="invalid-feedback text-red-500 text-sm mt-1">กรุณาเลือกคาบที่สอนด้วยค่ะ</div>
+        </div>
+        <div>
+          <label for="subjectSave" class="block text-sm font-medium glow-blue">วิชาที่สอนแทน</label>
+          <input
+            type="text"
+            id="subjectSave"
+            name="subjectSave"
+            class="w-full bg-gray-700 border-2 border-gray-600 rounded-lg p-3 text-white focus:border-green-400 focus:ring-0 transition duration-200"
+            value="ท"
+            placeholder="กรุณากรอกวิชาที่สอนแทน"
+            required
+          />
+          <div class="invalid-feedback text-red-500 text-sm mt-1">กรุณากรอกวิชาที่สอนแทนด้วยค่ะ</div>
+        </div>
+        <div>
+          <label for="subjectRoom" class="block text-sm font-medium glow-blue">ห้องที่สอนแทน</label>
+          <input
+            type="text"
+            id="subjectRoom"
+            name="subjectRoom"
+            class="w-full bg-gray-700 border-2 border-gray-600 rounded-lg p-3 text-white focus:border-green-400 focus:ring-0 transition duration-200"
+            placeholder="กรุณากรอกห้องที่สอนแทน"
+            required
+          />
+          <div class="invalid-feedback text-red-500 text-sm mt-1">กรุณากรอกห้องที่สอนแทนด้วยค่ะ</div>
+        </div>
+        <div class="flex space-x-4">
+          <button
+            type="submit"
+            class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition duration-200 hover:-translate-y-1 disabled:bg-gray-600 disabled:cursor-not-allowed"
+            id="btn1"
+          >
+            <i class="bi bi-send-fill"></i> ลงทะเบียน
+          </button>
+          <button
+            type="button"
+            class="flex-1 bg-blue-600 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition duration-200 hover:-translate-y-1 disabled:bg-gray-600 disabled:cursor-not-allowed"
+            id="btn2"
+            style="display: none"
+            disabled
+          >
+            <i class="bi bi-send-fill"></i> กำลังลงทะเบียน...
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-8 space-y-4">
+        <div>
+          <label for="checkDay" class="block text-sm font-medium glow-blue">วันที่ต้องการตรวจสอบตารางว่าง</label>
+          <select
+            id="checkDay"
+            name="checkDay"
+            class="w-full bg-gray-700 border-2 border-gray-600 rounded-lg p-3 text-white focus:border-green-400 focus:ring-0 transition duration-200"
+            required
+          >
+            <option value="" disabled selected>เลือกวัน</option>
+            <option value="จันทร์">จันทร์</option>
+            <option value="อังคาร">อังคาร</option>
+            <option value="พุธ">พุธ</option>
+            <option value="พฤหัสบดี">พฤหัสบดี</option>
+            <option value="ศุกร์">ศุกร์</option>
+          </select>
+          <div class="invalid-feedback text-red-500 text-sm mt-1">กรุณาเลือกวันด้วยค่ะ</div>
+        </div>
+        <div class="flex space-x-4">
+          <button
+            type="button"
+            class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition duration-200 hover:-translate-y-1"
+            id="checkAvailabilityBtn"
+          >
+            <i class="bi bi-calendar-check"></i> ตรวจสอบคาบว่าง
+          </button>
+          <button
+            type="button"
+            class="flex-1 bg-purple-600 hover:bg-purple-500 text-white font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition duration-200 hover:-translate-y-1"
+            id="showStatsChartBtn"
+          >
+            <i class="bi bi-bar-chart-fill"></i> ดูกราฟสถิติ
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-8 hidden" id="chartContainer">
+        <canvas id="statsChart" class="w-full"></canvas>
+      </div>
+    </div>
+
+    <footer class="fixed bottom-0 w-full bg-gray-900 bg-opacity-80 backdrop-blur-sm text-center py-4 text-sm glow-pink">
+      <img
+        src="https://aliyahaunjo.github.io/image/kruaun.png"
+        class="inline w-6 h-auto mr-2"
+      />
+      ©️พัฒนาโดย ครูอั๋น ใจดี <span id="year"></span>
+    </footer>
+
+    <div class="text-center py-4 text-sm glow-pink">
+      © <span id="year2"></span> Dev By | ครูอั๋น ใจดี
+    </div>
+
+    <script>
+      const scriptUrl = "https://script.google.com/macros/s/AKfycbxBsq2iZg7hu61ZUB__uhxYPt2vsHripo-9FGhjBScgORJ7vpTutgEbXtnRiNzIrLY7VQ/exec";
+
+      $(document).ready(() => {
+        $("#btn1").show();
+        $("#btn2").hide();
+
+        $("#year").text(new Date().getFullYear());
+        $("#year2").text(new Date().getFullYear());
+
+        liff
+          .init({
+            liffId: "2000563749-pzE08oM6",
+            withLoginOnExternalBrowser: true,
+          })
+          .then(() => {
+            console.log("LIFF Initialized Successfully");
+            if (!liff.isLoggedIn()) {
+              liff.login();
+            }
+          })
+          .catch((err) => {
+            console.error("LIFF Initialization Failed", err);
+            Swal.fire({
+              icon: "error",
+              title: "ไม่สามารถเชื่อมต่อ LINE LIFF ได้",
+              text: "กรุณาตรวจสอบการเชื่อมต่อหรือลองใหม่",
+            });
+          });
+
+        $("#myForm select, #myForm input, #checkDay").on("input change", function () {
+          if ($(this).is(":valid")) {
+            $(this).css("border-color", "#4ade80");
+          } else {
+            $(this).css("border-color", "#ef4444");
+          }
+        });
+
+        $("#checkAvailabilityBtn").on("click", checkAvailability);
+        $("#showStatsChartBtn").on("click", showStatsChart);
+      });
+
+      function submitForm() {
+        $("#btn1").hide();
+        $("#btn2").show();
+        $.LoadingOverlay("show");
+
+        const data = {
+          opt: "savedata",
+          uid: liff.getDecodedIDToken()?.sub || "",
+          uimg: liff.getDecodedIDToken()?.picture || "",
+          nameTeacher: $("#nameTeacher").val(),
+          nameTeacherSave: $("#nameTeacherSave").val(),
+          numberPeriod: $("#numberPeriod").val(),
+          numberAtPreriod: $("#numberAtPreriod").val(),
+          subjectSave: $("#subjectSave").val(),
+          subjectRoom: $("#subjectRoom").val(),
+        };
+
+        console.log("Submitting Data:", data);
+
+        $.ajax({
+          method: "POST",
+          url: scriptUrl,
+          data: data,
+          dataType: "json",
+          success: (res) => {
+            $.LoadingOverlay("hide");
+            $("#btn2").hide();
+            $("#btn1").show();
+
+            if (res.status === "success") {
+              $("#myForm")[0].reset();
+              Swal.fire({
+                icon: "success",
+                title: "บันทึกข้อมูลเรียบร้อย",
+                text: "กำลังเปิดหน้าต่างแชร์ไปยัง LINE...",
+                confirmButtonText: "ตกลง",
+              }).then(() => {
+                window.formData = data;
+                shareForm();
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาด",
+                text: res.message || "ไม่สามารถบันทึกข้อมูลได้",
+                confirmButtonText: "ตกลง",
+              });
+            }
+          },
+          error: (err) => {
+            console.error("Submission Error:", err);
+            $.LoadingOverlay("hide");
+            $("#btn2").hide();
+            $("#btn1").show();
+            Swal.fire({
+              icon: "error",
+              title: "บันทึกข้อมูลไม่สำเร็จ",
+              text: "กรุณาลองใหม่อีกครั้ง",
+              confirmButtonText: "ตกลง",
+            });
+          },
+        });
+      }
+
+      function shareForm() {
+        if (!window.formData) {
+          Swal.fire({
+            icon: "error",
+            title: "ไม่มีข้อมูลสำหรับแชร์",
+            text: "กรุณาบันทึกข้อมูลก่อนแชร์",
+            confirmButtonText: "ตกลง",
+          });
+          return;
+        }
+
+        const flexMessage = {
+          type: "flex",
+          altText: "รายละเอียดการสอนแทน",
+          contents: {
+            type: "bubble",
+            styles: {
+              header: { backgroundColor: "#1e3a8a" },
+              body: { backgroundColor: "#1e3a4e" },
+              footer: { backgroundColor: "#ec4899" },
+            },
+            header: {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "text",
+                  text: "📚 แจ้งจัดสอนแทน",
+                  weight: "bold",
+                  size: "xl",
+                  color: "#ffffff",
+                  align: "center",
+                },
+              ],
+              paddingAll: "lg",
+            },
+            body: {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  contents: [
+                    { type: "text", text: "👩‍🏫 ผู้ลาสอน:", size: "sm", color: "#ffffff", flex: 2 },
+                    {
+                      type: "text",
+                      text: window.formData.nameTeacher,
+                      size: "sm",
+                      color: "#ffffff",
+                      wrap: true,
+                      flex: 3,
+                    },
+                  ],
+                  spacing: "sm",
+                  margin: "md",
+                },
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  contents: [
+                    { type: "text", text: "👨‍🏫 ผู้สอนแทน:", size: "sm", color: "#ffffff", flex: 2 },
+                    {
+                      type: "text",
+                      text: window.formData.nameTeacherSave,
+                      size: "sm",
+                      color: "#ffffff",
+                      wrap: true,
+                      flex: 3,
+                    },
+                  ],
+                  spacing: "sm",
+                  margin: "md",
+                },
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  contents: [
+                    { type: "text", text: "⏰ จำนวนคาบ:", size: "sm", color: "#ffffff", flex: 2 },
+                    {
+                      type: "text",
+                      text: window.formData.numberPeriod,
+                      size: "sm",
+                      color: "#ffffff",
+                      wrap: true,
+                      flex: 3,
+                    },
+                  ],
+                  spacing: "sm",
+                  margin: "md",
+                },
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  contents: [
+                    { type: "text", text: "📅 คาบที่:", size: "sm", color: "#ffffff", flex: 2 },
+                    {
+                      type: "text",
+                      text: window.formData.numberAtPreriod,
+                      size: "sm",
+                      color: "#ffffff",
+                      wrap: true,
+                      flex: 3,
+                    },
+                  ],
+                  spacing: "sm",
+                  margin: "md",
+                },
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  contents: [
+                    { type: "text", text: "📖 วิชา:", size: "sm", color: "#ffffff", flex: 2 },
+                    {
+                      type: "text",
+                      text: window.formData.subjectSave,
+                      size: "sm",
+                      color: "#ffffff",
+                      wrap: true,
+                      flex: 3,
+                    },
+                  ],
+                  spacing: "sm",
+                  margin: "md",
+                },
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  contents: [
+                    { type: "text", text: "🏫 ห้อง:", size: "sm", color: "#ffffff", flex: 2 },
+                    {
+                      type: "text",
+                      text: window.formData.subjectRoom,
+                      size: "sm",
+                      color: "#ffffff",
+                      wrap: true,
+                      flex: 3,
+                    },
+                  ],
+                  spacing: "sm",
+                  margin: "md",
+                },
+              ],
+              paddingAll: "lg",
+            },
+            footer: {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "text",
+                  text: "พัฒนาโดย ❤️ครูอั๋น ใจดี❤️",
+                  size: "xs",
+                  color: "#ffffff",
+                  align: "center",
+                },
+              ],
+              paddingAll: "md",
+            },
+          },
+        };
+
+        liff
+          .shareTargetPicker([flexMessage])
+          .then(() => {
+            Swal.fire({
+              icon: "success",
+              title: "แชร์สำเร็จ",
+              text: "ข้อมูลถูกแชร์ไปยัง LINE เรียบร้อยแล้ว",
+              confirmButtonText: "ตกลง",
+            });
+          })
+          .catch((err) => {
+            console.error("Share Error:", err);
+            Swal.fire({
+              icon: "error",
+              title: "แชร์ไม่สำเร็จ",
+              text: "เกิดข้อผิดพลาดในการแชร์ กรุณาลองใหม่",
+              confirmButtonText: "ตกลง",
+            });
+          });
+      }
+
+      function checkAvailability() {
+        const day = $("#checkDay").val();
+
+        if (!day) {
+          Swal.fire({
+            icon: "error",
+            title: "ข้อมูลไม่ครบ",
+            text: "กรุณาเลือกวัน",
+            confirmButtonText: "ตกลง",
+          });
+          return;
+        }
+
+        $.LoadingOverlay("show");
+
+        $.ajax({
+          method: "GET",
+          url: scriptUrl,
+          data: { opt: "getFreeTeachers" },
+          dataType: "json",
+          success: (res) => {
+            $.LoadingOverlay("hide");
+            if (res.status === "success" && res.data) {
+              const teachers = res.data;
+              let htmlContent = `<h3 class="text-lg font-bold glow-green">รายละเอียดวัน${day}</h3>`;
+              let hasFreePeriods = false;
+
+              teachers.forEach((teacher) => {
+                const periodString = (teacher[day] || "")
+                  .replace(/คาบ\s*/g, "")
+                  .replace(/\s+/g, "");
+                const freePeriods = periodString
+                  .split(",")
+                  .filter(
+                    (period) =>
+                      period.trim() !== "" && !isNaN(period) && period !== "0"
+                  )
+                  .map(Number)
+                  .sort((a, b) => a - b);
+
+                if (freePeriods.length > 0) {
+                  hasFreePeriods = true;
+                  htmlContent += `
+                    <div class="mt-2">
+                      <p class="text-sm"><strong>${teacher["ชื่อครู"]}</strong>: คาบ ${freePeriods.join(", ")}</p>
+                    </div>`;
+                }
+              });
+
+              if (!hasFreePeriods) {
+                htmlContent += `<p class="text-sm glow-pink">ไม่มีครูที่มีคาบว่างในวัน${day}</p>`;
+              }
+
+              Swal.fire({
+                icon: hasFreePeriods ? "success" : "info",
+                title: `คาบว่างในวัน${day}`,
+                html: htmlContent,
+                confirmButtonText: "ตกลง",
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาด",
+                text: res.message || "ไม่สามารถดึงข้อมูลตารางว่างได้",
+                confirmButtonText: "ตกลง",
+              });
+            }
+          },
+          error: (err) => {
+            console.error("Availability Check Error:", err);
+            $.LoadingOverlay("hide");
+            Swal.fire({
+              icon: "error",
+              title: "ไม่สามารถตรวจสอบตารางว่าง",
+              text: err.status === 0
+                ? "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาตรวจสอบการเชื่อมต่อหรือลองใหม่"
+                : "เกิดข้อผิดพลาดในการดึงข้อมูล กรุณาลองใหม่",
+              confirmButtonText: "ตกลง",
+            });
+          },
+        });
+      }
+
+      function showStatsChart() {
+        $.LoadingOverlay("show");
+
+        $.ajax({
+          method: "GET",
+          url: scriptUrl,
+          data: { opt: "getSubstituteStats" },
+          dataType: "json",
+          timeout: 10000,
+          success: (res) => {
+            $.LoadingOverlay("hide");
+            if (res.status === "success" && res.data) {
+              if (res.data.length === 0) {
+                Swal.fire({
+                  icon: "info",
+                  title: "ไม่มีข้อมูลสถิติ",
+                  text: "ยังไม่มีบันทึกการสอนแทนในระบบ",
+                  confirmButtonText: "ตกลง",
+                });
+                return;
+              }
+
+              const stats = res.data;
+              const labels = stats.map(item => item.nameTeacherSave);
+              const data = stats.map(item => parseInt(item.totalPeriods, 10));
+
+              const colors = [
+                'rgba(74, 222, 128, 0.6)',  // Green
+                'rgba(59, 130, 246, 0.6)',  // Blue
+                'rgba(236, 72, 153, 0.6)',  // Pink
+                'rgba(255, 159, 64, 0.6)',  // Orange
+                'rgba(153, 102, 255, 0.6)', // Purple
+                'rgba(255, 99, 132, 0.6)',  // Red
+                'rgba(54, 162, 235, 0.6)',  // Sky Blue
+                'rgba(255, 206, 86, 0.6)',  // Yellow
+                'rgba(75, 192, 192, 0.6)',  // Teal
+                'rgba(173, 181, 189, 0.6)', // Gray
+                'rgba(255, 105, 180, 0.6)', // Hot Pink
+                'rgba(0, 206, 209, 0.6)',   // Cyan
+                'rgba(124, 252, 0, 0.6)',   // Lime Green
+                'rgba(238, 130, 238, 0.6)', // Violet
+                'rgba(210, 105, 30, 0.6)'   // Chocolate
+              ];
+              const borderColors = colors.map(color => color.replace('0.6', '1'));
+
+              const ctx = document.getElementById("statsChart").getContext("2d");
+              $("#chartContainer").removeClass("hidden");
+
+              if (window.statsChartInstance) {
+                window.statsChartInstance.destroy();
+              }
+
+              window.statsChartInstance = new Chart(ctx, {
+                type: "doughnut",
+                data: {
+                  labels: labels,
+                  datasets: [{
+                    label: "จำนวนคาบที่สอนแทน",
+                    data: data,
+                    backgroundColor: colors.slice(0, labels.length),
+                    borderColor: borderColors.slice(0, labels.length),
+                    borderWidth: 1
+                  }]
+                },
+                options: {
+                  plugins: {
+                    legend: {
+                      position: 'bottom',
+                      labels: {
+                        color: "#ffffff",
+                        font: { size: 14 },
+                        padding: 20
+                      }
+                    },
+                    title: {
+                      display: true,
+                      text: "สถิติการสอนแทนตามชื่อผู้สอนแทน",
+                      color: "#4ade80",
+                      font: { size: 18 }
+                    },
+                    tooltip: {
+                      callbacks: {
+                        label: function(context) {
+                          let label = context.label || '';
+                          let value = context.parsed || 0;
+                          return `${label}: ${value} คาบ`;
+                        }
+                      }
+                    }
+                  },
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  cutout: '50%'
+                }
+              });
+
+              document.getElementById("chartContainer").scrollIntoView({ behavior: "smooth" });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: "เกิดข้อผิดพลาด",
+                text: res.message || "ไม่สามารถดึงข้อมูลสถิติได้",
+                confirmButtonText: "ตกลง",
+              });
+            }
+          },
+          error: (err) => {
+            console.error("Stats Error:", err);
+            $.LoadingOverlay("hide");
+            let errorMessage = "เกิดข้อผิดพลาดในการดึงข้อมูล กรุณาลองใหม่";
+            if (err.status === 0) {
+              errorMessage = "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาตรวจสอบการเชื่อมต่อหรือ URL ของ Google Apps Script";
+            } else if (err.status === 404) {
+              errorMessage = "ไม่พบ Google Apps Script Endpoint กรุณาตรวจสอบ scriptUrl";
+            } else if (err.status === 403) {
+              errorMessage = "ไม่มีสิทธิ์เข้าถึง Google Apps Script กรุณาตรวจสอบการตั้งค่า Web App";
+            } else if (err.statusText === "timeout") {
+              errorMessage = "การร้องขอหมดเวลา กรุณาลองใหม่หรือตรวจสอบเซิร์ฟเวอร์";
+            }
+            Swal.fire({
+              icon: "error",
+              title: "ไม่สามารถดึงข้อมูลสถิติ",
+              html: `${errorMessage}<br><small>URL: ${scriptUrl}?opt=getSubstituteStats</small>`,
+              confirmButtonText: "ตกลง",
+            });
+          }
+        });
+      }
+
+      (() => {
+        "use strict";
+        const forms = document.querySelectorAll(".needs-validation");
+        Array.from(forms).forEach((form) => {
+          form.addEventListener(
+            "submit",
+            (event) => {
+              event.preventDefault();
+              if (!form.checkValidity()) {
+                event.stopPropagation();
+                form.classList.add("was-validated");
+                $("#myForm").find(":invalid").first().focus();
+              } else {
+                submitForm();
+              }
+            },
+            false
+          );
+        });
+      })();
+    </script>
+
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
+  </body>
+</html>
